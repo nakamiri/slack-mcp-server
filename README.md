@@ -61,6 +61,10 @@ Available tools:
   - Content filters: `has` (emoji reactions), `is` (saved/thread)
   - Sorting options by relevance score or timestamp
 
+Notes on message payloads:
+- Channel history and thread replies now include `blocks` and `attachments` fields when present (passed through as-is)
+- Search results may include `blocks`/`attachments` when provided by Slack's `search.messages`
+
 ## Quick Start
 
 ### Installation

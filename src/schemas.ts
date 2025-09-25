@@ -43,6 +43,7 @@ const ReactionSchema = z
 
 const ConversationsHistoryMessageSchema = z
   .object({
+    // Common message fields
     reactions: z.array(ReactionSchema).optional(),
     reply_count: z.number().optional(),
     reply_users: z.array(z.string()).optional(),
@@ -53,6 +54,12 @@ const ConversationsHistoryMessageSchema = z
     ts: z.string().optional(),
     type: z.string().optional(),
     user: z.string().nullable().optional(),
+
+    // Additional rich content fields (pass-through)
+    // Slack Block Kit blocks
+    blocks: z.array(z.unknown()).optional(),
+    // Legacy attachments
+    attachments: z.array(z.unknown()).optional(),
   })
   .strip();
 
@@ -91,6 +98,9 @@ const SearchMessageSchema = z
     ts: z.string().optional(),
     type: z.string().optional(),
     user: z.string().nullable().optional(),
+    // Include when present in search results
+    blocks: z.array(z.unknown()).optional(),
+    attachments: z.array(z.unknown()).optional(),
   })
   .strip();
 
