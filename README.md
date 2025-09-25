@@ -221,6 +221,51 @@ Example C — Run TypeScript directly (development):
 }
 ```
 
+Example D — Your local path on this machine (Claude Desktop, macOS):
+
+Prereq: build once in your repo directory
+
+```bash
+cd /Users/nack/work/git-works/nakamiri/slack-mcp-server
+npm ci && npm run build
+```
+
+Then configure Claude Desktop to point to the built binary:
+
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "command": "/Users/nack/work/git-works/nakamiri/slack-mcp-server/dist/index.js",
+      "args": [],
+      "env": {
+        "SLACK_USER_TOKEN": "xoxp-xxxxxxxx",
+        "SLACK_SAFE_SEARCH": "true"
+      }
+    }
+  }
+}
+```
+
+Or use Node to run the built file (portable):
+
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "command": "node",
+      "args": [
+        "/Users/nack/work/git-works/nakamiri/slack-mcp-server/dist/index.js"
+      ],
+      "env": {
+        "SLACK_USER_TOKEN": "xoxp-xxxxxxxx",
+        "SLACK_SAFE_SEARCH": "true"
+      }
+    }
+  }
+}
+```
+
 Notes:
 - `.env` may not be loaded when launched by a client; specify `env` in the client config.
 - Most desktop clients support Stdio. HTTP mode requires a client that supports Streamable HTTP.
