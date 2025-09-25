@@ -1,0 +1,7 @@
+@nakamiri:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_PAT}
+
+# Usage:
+# 1) export GITHUB_PAT=ghp_xxx (with read:packages scope)
+# 2) cp .npmrc.example .npmrc
+# 3) npx -y @nakamiri/slack-mcp-server

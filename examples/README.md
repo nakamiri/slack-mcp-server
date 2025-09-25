@@ -15,11 +15,9 @@ Uses the newer Streamable HTTP transport to communicate with the MCP server over
 1. Set up your environment variables in `.env`:
 ```env
 # For the server
-SLACK_BOT_TOKEN=xoxb-your-bot-token
 SLACK_USER_TOKEN=xoxp-your-user-token
 
 # For the examples (same values, different variable names)
-EXMAPLES_SLACK_BOT_TOKEN=xoxb-your-bot-token
 EXMAPLES_SLACK_USER_TOKEN=xoxp-your-user-token
 ```
 
@@ -73,7 +71,7 @@ Both examples:
 
 ### Common Issues
 
-1. **Missing environment variables**: Ensure all required `SLACK_BOT_TOKEN`, `SLACK_USER_TOKEN`, `EXMAPLES_SLACK_BOT_TOKEN`, and `EXMAPLES_SLACK_USER_TOKEN` are set.
+1. **Missing environment variables**: Ensure `SLACK_USER_TOKEN` and `EXMAPLES_SLACK_USER_TOKEN` are set.
 
 2. **Connection refused (HTTP)**: Make sure the HTTP server is running on the specified port before running the HTTP client.
 

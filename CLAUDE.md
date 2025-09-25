@@ -65,8 +65,7 @@ All tools follow the pattern: validate request → call Slack API → parse resp
 
 ### Environment Requirements
 Must set in environment or `.env` file:
-- `SLACK_BOT_TOKEN`: Bot User OAuth Token
-- `SLACK_USER_TOKEN`: User OAuth Token (for search)
+- `SLACK_USER_TOKEN`: User OAuth Token (used for all Slack API calls)
 
 ## Key Implementation Notes
 

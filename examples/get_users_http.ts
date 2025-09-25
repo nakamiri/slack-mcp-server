@@ -8,12 +8,7 @@ import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 config();
 
 // Get and validate necessary environment variables
-const slackToken = process.env.EXMAPLES_SLACK_BOT_TOKEN;
 const userToken = process.env.EXMAPLES_SLACK_USER_TOKEN;
-
-if (!slackToken) {
-  throw new Error('EXMAPLES_SLACK_BOT_TOKEN environment variable is required');
-}
 
 if (!userToken) {
   throw new Error('EXMAPLES_SLACK_USER_TOKEN environment variable is required');

@@ -1,5 +1,37 @@
 # slack-mcp-server
 
+## About This Fork (by @nakamiri)
+
+This repository is a fork of the original project:
+
+- Upstream: https://github.com/ubie-oss/slack-mcp-server
+- License: Apache-2.0 (the upstream license and notices are preserved)
+
+### What Changed in This Fork
+
+- Token model: Unified to User token only
+  - Removed Bot token usage and the `SLACK_BOT_TOKEN` requirement
+  - All Slack Web API calls now use `SLACK_USER_TOKEN`
+  - `search.messages` and all other endpoints run under the User token
+- Examples and env samples
+  - `.env.sample`: kept only `EXMAPLES_SLACK_USER_TOKEN`
+  - `examples/get_users.ts`,`examples/get_users_http.ts`: use only `EXMAPLES_SLACK_USER_TOKEN`
+- Documentation updates
+  - README/CLAUDE.md updated to reflect User-token-only operation
+  - Added setup notes for GitHub Packages
+- Package and publishing
+  - Package name changed to `@nakamiri/slack-mcp-server`
+  - Repository links updated to this fork
+  - Added `publishConfig.registry` for GitHub Packages
+  - Added `.npmrc.example` for one-shot local `npx` usage
+
+### Notes on Behavior
+
+- Required scopes depend on features you use (e.g., `users:read`, `conversations:read`, `search:read`, and for posting `chat:write`)
+- Listing/searching visibility follows the permissions of the User token
+- Breaking change: `SLACK_BOT_TOKEN` is no longer read; clients must provide `SLACK_USER_TOKEN` only
+
+
 A [MCP(Model Context Protocol)](https://www.anthropic.com/news/model-context-protocol) server for accessing Slack API. This server allows AI assistants to interact with the Slack API through a standardized interface.
 
 ## Transport Support
@@ -34,23 +66,21 @@ Available tools:
 ### Installation
 
 ```bash
-npm install @ubie-oss/slack-mcp-server
+npm install @nakamiri/slack-mcp-server
 ```
 
-NOTE: Its now hosted in GitHub Registry so you need your PAT.
+NOTE: This package is hosted in GitHub Packages (npm.pkg.github.com). You need a GitHub PAT with at least `read:packages` to install/run via `npx`.
 
 ### Configuration
 
 You need to set the following environment variables:
 
-- `SLACK_BOT_TOKEN`: Slack Bot User OAuth Token
-- `SLACK_USER_TOKEN`: Slack User OAuth Token (required for some features like message search)
+- `SLACK_USER_TOKEN`: Slack User OAuth Token (all features use this token)
 - `SLACK_SAFE_SEARCH` (optional): When set to `true`, automatically excludes private channels, DMs, and group DMs from search results. This is enforced server-side and cannot be overridden by clients.
 
 You can also create a `.env` file to set these environment variables:
 
 ```
-SLACK_BOT_TOKEN=xoxb-your-bot-token
 SLACK_USER_TOKEN=xoxp-your-user-token
 SLACK_SAFE_SEARCH=true  # Optional: Enable safe search mode
 ```
@@ -61,12 +91,17 @@ SLACK_SAFE_SEARCH=true  # Optional: Enable safe search mode
 
 **Stdio Transport (default)**:
 ```bash
-npx @ubie-oss/slack-mcp-server
+# One‑time setup (recommended)
+npm config set @nakamiri:registry https://npm.pkg.github.com
+npm config set //npm.pkg.github.com/:_authToken "<your-github-pat>"
+
+# Run via npx
+npx @nakamiri/slack-mcp-server
 ```
 
 **Streamable HTTP Transport**:
 ```bash
-npx @ubie-oss/slack-mcp-server -port 3000
+npx @nakamiri/slack-mcp-server -port 3000
 ```
 
 You can also run the installed module with node:
@@ -92,11 +127,9 @@ node node_modules/.bin/slack-mcp-server -port 3000
     "command": "npx",
     "args": [
       "-y",
-      "@ubie-oss/slack-mcp-server"
+      "@nakamiri/slack-mcp-server"
     ],
     "env": {
-      "NPM_CONFIG_//npm.pkg.github.com/:_authToken": "<your-github-pat>",
-      "SLACK_BOT_TOKEN": "<your-bot-token>",
       "SLACK_USER_TOKEN": "<your-user-token>",
       "SLACK_SAFE_SEARCH": "true"
     }
@@ -108,7 +141,17 @@ node node_modules/.bin/slack-mcp-server -port 3000
 
 Start the server:
 ```bash
-SLACK_BOT_TOKEN=<your-bot-token> SLACK_USER_TOKEN=<your-user-token> npx @ubie-oss/slack-mcp-server -port 3000
+SLACK_USER_TOKEN=<your-user-token> npx @nakamiri/slack-mcp-server -port 3000
+```
+
+### One‑shot (no global npm config)
+
+Create a temporary `.npmrc` in your current directory (or use the provided `.npmrc.example`):
+
+```bash
+export GITHUB_PAT=<your-github-pat-with-read:packages>
+cp .npmrc.example .npmrc
+npx -y @nakamiri/slack-mcp-server
 ```
 
 Connect to: `http://localhost:3000/mcp`

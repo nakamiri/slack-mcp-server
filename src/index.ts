@@ -35,13 +35,6 @@ import {
 
 dotenv.config();
 
-if (!process.env.SLACK_BOT_TOKEN) {
-  console.error(
-    'SLACK_BOT_TOKEN is not set. Please set it in your environment or .env file.'
-  );
-  process.exit(1);
-}
-
 if (!process.env.SLACK_USER_TOKEN) {
   console.error(
     'SLACK_USER_TOKEN is not set. Please set it in your environment or .env file.'
@@ -49,8 +42,8 @@ if (!process.env.SLACK_USER_TOKEN) {
   process.exit(1);
 }
 
-const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN);
-const userClient = new WebClient(process.env.SLACK_USER_TOKEN);
+// Use only the User token for all Slack Web API calls
+const slackClient = new WebClient(process.env.SLACK_USER_TOKEN);
 
 // Safe search mode to exclude private channels and DMs
 const safeSearchMode = process.env.SLACK_SAFE_SEARCH === 'true';
@@ -387,7 +380,7 @@ function createServer(): Server {
           query = query.trim();
           console.log('Search query:', query);
 
-          const response = await userClient.search.messages({
+          const response = await slackClient.search.messages({
             query: query,
             highlight: parsedParams.highlight,
             sort: parsedParams.sort,
