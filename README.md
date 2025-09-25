@@ -158,6 +158,76 @@ Connect to: `http://localhost:3000/mcp`
 
 See [examples/README.md](examples/README.md) for detailed client examples.
 
+#### Local Client Configuration (from repository)
+
+If you don't want to install/publish the package and prefer running directly from your local clone, point your MCP client (e.g., Claude Desktop) to the local files.
+
+Claude Desktop config locations:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Linux: `~/.config/Claude/claude_desktop_config.json`
+- Windows: `C:\\Users\\<YOU>\\AppData\\Roaming\\Claude\\claude_desktop_config.json`
+
+Example A — Use built binary (macOS/Linux):
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "command": "/absolute/path/to/repo/slack-mcp-server/dist/index.js",
+      "args": [],
+      "env": {
+        "SLACK_USER_TOKEN": "xoxp-xxxxxxxx",
+        "SLACK_SAFE_SEARCH": "true"
+      }
+    }
+  }
+}
+```
+
+Example B — Use Node to run dist (portable; recommended for Windows):
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/repo/slack-mcp-server/dist/index.js"
+      ],
+      "env": {
+        "SLACK_USER_TOKEN": "xoxp-xxxxxxxx",
+        "SLACK_SAFE_SEARCH": "true"
+      }
+    }
+  }
+}
+```
+
+Example C — Run TypeScript directly (development):
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "command": "node",
+      "args": [
+        "--import",
+        "/absolute/path/to/repo/slack-mcp-server/ts-node-loader.js",
+        "/absolute/path/to/repo/slack-mcp-server/src/index.ts"
+      ],
+      "env": {
+        "SLACK_USER_TOKEN": "xoxp-xxxxxxxx",
+        "SLACK_SAFE_SEARCH": "true"
+      }
+    }
+  }
+}
+```
+
+Notes:
+- `.env` may not be loaded when launched by a client; specify `env` in the client config.
+- Most desktop clients support Stdio. HTTP mode requires a client that supports Streamable HTTP.
+- HTTP alternative: start server locally and connect via URL
+  1) `SLACK_USER_TOKEN=... node dist/index.js -port 3000`
+  2) Connect to `http://localhost:3000/mcp` from your HTTP-capable client
+
 ## Implementation Pattern
 
 This server adopts the following implementation pattern:
